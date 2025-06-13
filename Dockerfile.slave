@@ -1,0 +1,26 @@
+FROM registry.access.redhat.com/ubi9/ubi
+
+# Install SSH and sudo
+RUN dnf -y install \
+    openssh-server \
+    sudo \
+    passwd && \
+    dnf clean all
+
+# Create ansible user with password and sudo privileges
+RUN useradd -m ansible && \
+    echo "ansible:ansible" | chpasswd && \
+    usermod -aG wheel ansible
+
+# Create directory required for SSH daemon
+RUN mkdir -p /var/run/sshd
+
+# Generate SSH host keys
+RUN ssh-keygen -A
+
+# Expose SSH port
+EXPOSE 22
+
+# Start SSH daemon in foreground
+CMD ["/usr/sbin/sshd", "-D"]
+
