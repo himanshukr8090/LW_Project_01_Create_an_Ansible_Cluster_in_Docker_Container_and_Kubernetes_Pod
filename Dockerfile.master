@@ -1,0 +1,30 @@
+FROM registry.access.redhat.com/ubi9/ubi
+
+# Install system dependencies
+RUN dnf -y install \
+    python3 \
+    python3-pip \
+    openssh-clients \
+    openssh-server \
+    sudo \
+    passwd && \
+    dnf clean all
+
+# Install Ansible via pip
+RUN pip3 install --no-cache-dir ansible
+
+# Create ansible user and add to sudoers
+RUN useradd -m ansible && \
+    echo "ansible:ansible" | chpasswd && \
+    usermod -aG wheel ansible
+
+# Create required SSH directory
+RUN mkdir -p /var/run/sshd
+
+# Generate SSH host keys
+RUN ssh-keygen -A
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
+
