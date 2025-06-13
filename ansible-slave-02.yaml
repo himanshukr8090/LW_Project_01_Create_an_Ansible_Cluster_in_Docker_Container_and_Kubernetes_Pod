@@ -1,0 +1,27 @@
+# 🔹 Ansible Slave 02 Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ansible-slave-02
+  labels:
+    app: ansible-slave-02
+spec:
+  containers:
+  - name: slave
+    image: himanshu8090/rhel9-ansible-slave:latest
+    ports:
+    - containerPort: 22
+---
+# 🔹 Ansible Slave 02 Service (Headless)
+apiVersion: v1
+kind: Service
+metadata:
+  name: ansible-slave-02
+spec:
+  clusterIP: None
+  selector:
+    app: ansible-slave-02
+  ports:
+  - port: 22
+    targetPort: 22
+
