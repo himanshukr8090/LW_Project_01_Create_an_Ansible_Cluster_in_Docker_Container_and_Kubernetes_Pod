@@ -1,0 +1,30 @@
+
+# 🔹 Ansible Master Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ansible-master
+  labels:
+    app: ansible-master
+spec:
+  containers:
+  - name: master
+    image: himanshu8090/rhel9-ansible-master:latest
+    ports:
+    - containerPort: 22
+---
+# 🔹 Ansible Master Service (Headless)
+apiVersion: v1
+kind: Service
+metadata:
+  name: ansible-master
+spec:
+  clusterIP: None
+  selector:
+    app: ansible-master
+  ports:
+  - port: 22
+    targetPort: 22
+
+
+
